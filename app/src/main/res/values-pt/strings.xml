@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Tile Club</string>
+    <string name="play">Jogar</string>
+    <string name="levels">Níveis</string>
+    <string name="shop">Loja</string>
+    <string name="daily_reward">Recompensa Diária</string>
+    <string name="level_title">Nível %1$d</string>
+    <string name="level_completed">Nível Concluído!</string>
+    <string name="level_failed">Bandeja Cheia!</string>
+    <string name="booster_undo">Desfazer</string>
+    <string name="booster_shuffle">Embaralhar</string>
+    <string name="booster_magic">Varinha</string>
+    <string name="booster_slot">+1 Espaço</string>
+    <string name="coins">Moedas</string>
+    <string name="stars">Estrelas</string>
+    <string name="moves">Movimentos</string>
+    <string name="restart">Reiniciar</string>
+    <string name="continue_game">Continuar</string>
+    <string name="next_level">Próximo Nível</string>
+</resources>

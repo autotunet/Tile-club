@@ -1,0 +1,6 @@
+{
+  "name": "Tile Club",
+  "description": "Juego de puzzles de fichas estilo Tile Club con niveles progresivos por capas, potenciadores mágicos y desafíos.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
