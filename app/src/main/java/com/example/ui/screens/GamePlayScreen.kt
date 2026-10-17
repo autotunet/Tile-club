@@ -395,9 +395,27 @@ private fun GameHeader(
                             color = Color.Black
                         )
                     }
+                    state.difficulty?.let { diff ->
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(6.dp))
+                                .background(Color(0xFF991B1B))
+                                .border(0.8.dp, Color(0xFFF87171), RoundedCornerShape(6.dp))
+                                .padding(horizontal = 5.dp, vertical = 2.dp)
+                        ) {
+                            Text(
+                                text = "${diff.difficultyIcon} ${diff.difficultyTier}",
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
+                        }
+                    }
                 }
+                val layoutSuffix = state.difficulty?.let { " • ${it.layoutType}" } ?: ""
                 Text(
-                    text = state.destination.monument,
+                    text = state.destination.monument + layoutSuffix,
                     fontSize = 11.sp,
                     color = Color.White.copy(alpha = 0.85f)
                 )

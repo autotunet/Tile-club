@@ -298,6 +298,16 @@ private fun LevelGridNode(
                     fontWeight = FontWeight.Black,
                     color = if (isCurrent) Color.Black else Color.White
                 )
+                if (levelNumber % 5 == 0) {
+                    val icon = if (levelNumber % 10 == 0) "👑" else "🔥"
+                    Text(
+                        text = icon,
+                        fontSize = 10.sp,
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(2.dp)
+                    )
+                }
             } else {
                 Icon(
                     Icons.Default.Lock,

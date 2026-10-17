@@ -172,8 +172,8 @@ private fun Cell3DStackItem(
         }
 
         // Ficha superior activa (Top tile)
-        val symbol = theme.symbols.getOrElse(topTile.typeId) { "❓" }
-        val tileBgColor = theme.colors.getOrElse(topTile.typeId) { 0xFFFFFFFF }
+        val symbol = theme.symbols.getOrElse(topTile.typeId % theme.symbols.size) { "❓" }
+        val tileBgColor = theme.colors.getOrElse(topTile.typeId % theme.colors.size) { 0xFFFFFFFF }
         val elevation = if (isHighlighted) 12.dp else if (topTile.isBlocked) 2.dp else (5 + layer * 2).dp
 
         val baseScale by animateFloatAsState(

@@ -34,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -222,6 +223,7 @@ fun MainMenuScreen(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text("▶️", fontSize = 28.sp)
                     Spacer(modifier = Modifier.width(12.dp))
+                    val currentDiff = remember(highestUnlocked) { com.example.domain.LevelGenerator.calculateDifficulty(highestUnlocked) }
                     Column(horizontalAlignment = Alignment.Start) {
                         Text(
                             text = "JUGAR NIVEL $highestUnlocked",
@@ -230,9 +232,9 @@ fun MainMenuScreen(
                             color = Color.White
                         )
                         Text(
-                            text = "Toca para continuar el desafío",
+                            text = "${currentDiff.difficultyIcon} ${currentDiff.difficultyTier} • ${currentDiff.targetTiles} fichas • ${currentDiff.maxStackHeight} capas 3D",
                             fontSize = 11.sp,
-                            color = Color.White.copy(alpha = 0.85f)
+                            color = Color.White.copy(alpha = 0.90f)
                         )
                     }
                 }

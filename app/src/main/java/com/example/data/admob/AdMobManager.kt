@@ -13,6 +13,9 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.google.android.gms.ads.RequestConfiguration
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -56,17 +59,19 @@ object AdMobManager {
 
     fun initialize(context: Context) {
         if (isInitialized.compareAndSet(false, true)) {
-            try {
-                val requestConfiguration = RequestConfiguration.Builder()
-                    .setTestDeviceIds(listOf(AdRequest.DEVICE_ID_EMULATOR))
-                    .build()
-                MobileAds.setRequestConfiguration(requestConfiguration)
+            kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+                try {
+                    val requestConfiguration = RequestConfiguration.Builder()
+                        .setTestDeviceIds(listOf(AdRequest.DEVICE_ID_EMULATOR))
+                        .build()
+                    MobileAds.setRequestConfiguration(requestConfiguration)
 
-                MobileAds.initialize(context.applicationContext) { initStatus ->
-                    Log.d(TAG, "AdMob SDK Initialized: $initStatus")
+                    MobileAds.initialize(context.applicationContext) { initStatus ->
+                        Log.d(TAG, "AdMob SDK Initialized: $initStatus")
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "AdMob initialization failed", e)
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "AdMob initialization failed", e)
             }
         }
     }
@@ -103,14 +108,10 @@ object AdMobManager {
                     _isInterstitialAdLoaded.value = false
                     Log.w(TAG, "Interstitial failed to load ($unitId): ${loadAdError.message}")
 
-                    // Try next unit or fallback to test ad if unapproved/no-fill
+                    // Fallback directly to test ad if unapproved or no-fill, avoiding recursive codec hammering
                     if (!useFallbackTest) {
-                        currentInterstitialUnitIndex++
-                        if (currentInterstitialUnitIndex >= USER_AD_UNIT_IDS.size) {
-                            loadInterstitial(context, useFallbackTest = true)
-                        } else {
-                            loadInterstitial(context, useFallbackTest = false)
-                        }
+                        currentInterstitialUnitIndex = (currentInterstitialUnitIndex + 1) % USER_AD_UNIT_IDS.size
+                        loadInterstitial(context, useFallbackTest = true)
                     }
                 }
             }
@@ -185,13 +186,10 @@ object AdMobManager {
                     _isRewardedAdLoaded.value = false
                     Log.w(TAG, "Rewarded Ad failed to load ($unitId): ${loadAdError.message}")
 
+                    // Fallback directly to test ad if unapproved or no-fill, avoiding recursive codec hammering
                     if (!useFallbackTest) {
-                        currentRewardedUnitIndex++
-                        if (currentRewardedUnitIndex >= USER_AD_UNIT_IDS.size) {
-                            loadRewardedAd(context, useFallbackTest = true)
-                        } else {
-                            loadRewardedAd(context, useFallbackTest = false)
-                        }
+                        currentRewardedUnitIndex = (currentRewardedUnitIndex + 1) % USER_AD_UNIT_IDS.size
+                        loadRewardedAd(context, useFallbackTest = true)
                     }
                 }
             }

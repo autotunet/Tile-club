@@ -91,6 +91,26 @@ fun CollectorTray(
                         color = Color.White
                     )
                 }
+            } else if (isNearFull && !isFull) {
+                Box(
+                    modifier = Modifier
+                        .padding(bottom = 4.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(
+                            brush = Brush.horizontalGradient(
+                                listOf(Color(0xFF991B1B), DangerRed, Color(0xFFEA580C))
+                            )
+                        )
+                        .border(1.dp, Color.White, RoundedCornerShape(12.dp))
+                        .padding(horizontal = 12.dp, vertical = 3.dp)
+                ) {
+                    Text(
+                        text = "⚠️ ¡ALERTA! BANDEJA CASI LLENA (${trayTiles.size}/$capacity)",
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Black,
+                        color = Color.White
+                    )
+                }
             }
 
             Box(

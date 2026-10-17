@@ -66,9 +66,12 @@ fun RotatingBottomAdBanner(
     var currentUnitIndex by remember { mutableIntStateOf(0) }
     var useFallbackTest by remember { mutableStateOf(false) }
     var adLoadKey by remember { mutableIntStateOf(0) }
+    var isReadyToLoad by remember { mutableStateOf(false) }
 
     // Automatic rotation loop: advances to next ad unit ID every rotationIntervalSeconds
     LaunchedEffect(Unit) {
+        delay(600) // Allow main UI tree to render cleanly first
+        isReadyToLoad = true
         while (isActive) {
             delay(rotationIntervalSeconds * 1000L)
             currentUnitIndex = (currentUnitIndex + 1) % AdMobManager.USER_AD_UNIT_IDS.size
@@ -100,23 +103,33 @@ fun RotatingBottomAdBanner(
             modifier = Modifier.padding(top = 2.dp, bottom = 1.dp)
         )
 
-        Crossfade(
-            targetState = adLoadKey,
-            label = "ad_banner_rotation"
-        ) { _ ->
-            AdViewContainer(
-                adUnitId = currentAdUnitId,
-                onFailedToLoad = {
-                    if (!useFallbackTest) {
-                        // Switch to test fallback or try next unit
-                        if (currentUnitIndex < AdMobManager.USER_AD_UNIT_IDS.size - 1) {
-                            currentUnitIndex++
-                        } else {
+        if (!isReadyToLoad) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Cargando anuncio...",
+                    fontSize = 11.sp,
+                    color = Color.LightGray.copy(alpha = 0.6f)
+                )
+            }
+        } else {
+            Crossfade(
+                targetState = adLoadKey,
+                label = "ad_banner_rotation"
+            ) { _ ->
+                AdViewContainer(
+                    adUnitId = currentAdUnitId,
+                    onFailedToLoad = {
+                        if (!useFallbackTest) {
                             useFallbackTest = true
                         }
                     }
-                }
-            )
+                )
+            }
         }
     }
 }

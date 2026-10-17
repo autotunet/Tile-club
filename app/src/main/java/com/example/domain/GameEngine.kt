@@ -41,7 +41,8 @@ data class GameState(
     val isTimerActive: Boolean = true,
     val hasNoPossibleMoves: Boolean = false,
     val shuffleAnimationKey: Int = 0,
-    val shuffleBannerText: String? = null
+    val shuffleBannerText: String? = null,
+    val difficulty: LevelDifficulty? = null
 ) {
     val remainingBoardTilesCount: Int get() = grid3D.remainingTilesCount
     val progressPercent: Float
@@ -75,7 +76,8 @@ class GameEngine {
             initialTilesCount = levelData.initialTilesCount,
             timeRemainingSec = levelData.timeLimitSeconds,
             totalTimeSec = levelData.timeLimitSeconds,
-            isTimerActive = true
+            isTimerActive = true,
+            difficulty = levelData.difficulty
         )
         return currentState
     }
@@ -111,7 +113,7 @@ class GameEngine {
             val matchingIds = matchingTiles.map { it.id }.toSet()
 
             val now = System.currentTimeMillis()
-            val currentCombo = if (now - lastMatchTime < 4500) currentState.combo + 1 else 1
+            val currentCombo = if (now - lastMatchTime < 3200) currentState.combo + 1 else 1
             lastMatchTime = now
 
             val matchPoints = 150 * currentCombo

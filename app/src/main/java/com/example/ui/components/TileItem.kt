@@ -45,8 +45,8 @@ fun TileView(
     formationBadge: String? = null,
     onClick: (() -> Unit)? = null
 ) {
-    val symbol = theme.symbols.getOrElse(tile.typeId) { "❓" }
-    val tileBgColor = theme.colors.getOrElse(tile.typeId) { 0xFFFFFFFF }
+    val symbol = theme.symbols.getOrElse(tile.typeId % theme.symbols.size) { "❓" }
+    val tileBgColor = theme.colors.getOrElse(tile.typeId % theme.colors.size) { 0xFFFFFFFF }
     val shape = RoundedCornerShape(10.dp)
 
     val elevation = if (isMatching) 10.dp else if (tile.isBlocked) 2.dp else (4 + tile.layer * 2).dp
